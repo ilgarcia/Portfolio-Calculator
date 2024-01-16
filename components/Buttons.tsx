@@ -1,9 +1,93 @@
+"use client";
+
 import { MdOutlineBackspace } from "react-icons/md";
 import { buttons } from "@/data/buttons";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import {
+  setHistory,
+  setValue,
+  setOperator,
+  setLastOperator,
+  setResult,
+} from "@/lib/slices/displaySlice";
 
 function Buttons() {
-  const handleClick = (action: string) => {
-    console.log(action);
+  const dispatch = useAppDispatch();
+
+  const historyValue = useAppSelector((state) => state.displayReducer.history);
+
+  const operatorValue = useAppSelector(
+    (state) => state.displayReducer.operator
+  );
+  const displayValue = useAppSelector((state) => state.displayReducer.value);
+
+  const displayLastOperator = useAppSelector(
+    (state) => state.displayReducer.lastOperator
+  );
+
+  const displayResult = useAppSelector((state) => state.displayReducer.result);
+
+  const handleClick = (title: string, action: string) => {
+    switch (action) {
+      case "clrDisplay":
+        dispatch(setValue("0"));
+        break;
+      case "clrHistory":
+        dispatch(setHistory([]));
+        dispatch(setOperator([]));
+        dispatch(setValue("0"));
+        break;
+      case "number":
+        let number =
+          displayValue === "0" || displayResult ? title : displayValue + title;
+        dispatch(setValue(number));
+        dispatch(setLastOperator(false));
+        dispatch(setResult(false));
+        break;
+      case "dot":
+        let dot = displayValue.includes(".")
+          ? displayValue
+          : displayValue + title;
+        dispatch(setValue(dot));
+        dispatch(setLastOperator(false));
+        dispatch(setResult(false));
+        break;
+      case "backspace":
+        let backspace =
+          displayValue.substring(0, displayValue.length - 1) === ""
+            ? "0"
+            : displayValue.substring(0, displayValue.length - 1);
+        dispatch(setValue(backspace));
+        break;
+      case "percentil":
+        let percentil = String(eval(displayValue + "/100"));
+        dispatch(setValue(percentil));
+        break;
+      case "operator":
+        if (operatorValue.length === 0 && historyValue.length === 0) {
+          dispatch(setOperator([...operatorValue, title]));
+          dispatch(setHistory([...historyValue, displayValue]));
+          dispatch(setValue("0"));
+          dispatch(setLastOperator(true));
+        } else {
+          if (displayLastOperator) {
+            let lastOperator = operatorValue.slice(-1);
+            dispatch(setOperator([...lastOperator, title]));
+            break;
+          }
+
+          let operator = operatorValue[operatorValue.length - 1];
+          let history = historyValue[historyValue.length - 1];
+          let calc = String(eval(history + operator + displayValue));
+
+          dispatch(setHistory([...historyValue, displayValue, calc]));
+          dispatch(setValue(calc));
+          dispatch(setResult(true));
+          dispatch(setLastOperator(true));
+        }
+
+        break;
+    }
   };
 
   return (
@@ -15,7 +99,7 @@ function Buttons() {
           style={{
             backgroundColor: button.color,
           }}
-          onClick={() => handleClick(button.action)}
+          onClick={() => handleClick(button.title, button.action)}
         >
           {button.title === "BC" ? <MdOutlineBackspace /> : button.title}
         </button>
