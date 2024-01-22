@@ -71,21 +71,28 @@ function Buttons() {
           dispatch(setLastOperator(true));
         } else {
           if (displayLastOperator) {
-            let lastOperator = operatorValue.slice(-1);
-            dispatch(setOperator([...lastOperator, title]));
+            const changeOperator = [...operatorValue];
+            changeOperator.pop();
+            dispatch(setOperator([...changeOperator, title]));
             break;
           }
 
           let operator = operatorValue[operatorValue.length - 1];
           let history = historyValue[historyValue.length - 1];
-          let calc = String(eval(history + operator + displayValue));
 
-          dispatch(setHistory([...historyValue, displayValue, calc]));
-          dispatch(setValue(calc));
+          let calc;
+          if (operator === "=") {
+            calc = displayValue;
+          } else {
+            calc = String(eval(history + operator + displayValue));
+          }
+
+          dispatch(setOperator([...operatorValue, title]));
           dispatch(setResult(true));
           dispatch(setLastOperator(true));
+          dispatch(setValue(calc));
+          dispatch(setHistory([...historyValue, displayValue, calc]));
         }
-
         break;
     }
   };
