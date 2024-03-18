@@ -1,19 +1,19 @@
 # Personal Portfolio Project - Calculator
 
-![image](https://github.com/ilgarcia/Portfolio-Calculator/assets/60369262/a6b93aa6-cf56-4824-8450-e8d07612940e)
+<img src="https://github.com/ilgarcia/Portfolio-Calculator/assets/60369262/a6b93aa6-cf56-4824-8450-e8d07612940e" alt="drawing" width="200"/>
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Description
+## 💻 Description
 
->
+One of my first projects was a calculator. Unfortunately, I lost the code 😅... But hey, I did it again! 
 
-## Features
+## 👾 Features
 
 - Simple project featuring a calculator.
 - Dynamic content with calculation history.
 
-## Technologies Used
+## 🚀 Technologies Used 
 
 - React
 - Next.js
